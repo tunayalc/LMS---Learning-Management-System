@@ -1,0 +1,20 @@
+app/auth/verify-email/page.tsx(10,17): error TS18047: 'searchParams' is possibly 'null'.
+app/auth/verify-email/page.tsx(11,17): error TS18047: 'searchParams' is possibly 'null'.
+i18n.ts(419,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(420,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(421,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(789,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(851,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1147,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1265,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1347,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1563,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1564,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1565,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1566,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1567,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1568,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1569,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1579,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1596,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1640,13): error TS1117: An object literal cannot have multiple properties with the same name.

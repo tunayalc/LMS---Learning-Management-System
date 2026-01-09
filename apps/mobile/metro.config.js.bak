@@ -1,0 +1,27 @@
+const path = require("path");
+const { getDefaultConfig } = require("@expo/metro-config");
+
+const projectRoot = __dirname;
+const workspaceRoot = path.resolve(projectRoot, "..", "..");
+
+// Get default config
+const config = getDefaultConfig(projectRoot);
+
+// Watch shared packages
+config.watchFolders = [path.resolve(workspaceRoot, "packages")];
+
+// Node modules resolution
+config.resolver.nodeModulesPaths = [
+  path.resolve(projectRoot, "node_modules"),
+  path.resolve(workspaceRoot, "node_modules")
+];
+
+// For monorepo support
+config.resolver.disableHierarchicalLookup = true;
+
+// Ensure all paths are resolved properly
+config.resolver.extraNodeModules = {
+  "@lms/shared": path.resolve(workspaceRoot, "packages", "shared")
+};
+
+module.exports = config;

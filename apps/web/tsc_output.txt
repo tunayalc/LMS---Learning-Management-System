@@ -1,0 +1,40 @@
+app/auth/verify-email/page.tsx(10,17): error TS18047: 'searchParams' is possibly 'null'.
+app/auth/verify-email/page.tsx(11,17): error TS18047: 'searchParams' is possibly 'null'.
+app/dashboard/[role]/page.tsx(635,52): error TS2367: This comparison appears to be unintentional because the types '"content" | "grades"' and '"exams"' have no overlap.
+app/dashboard/[role]/page.tsx(2839,28): error TS2367: This comparison appears to be unintentional because the types '"content" | "grades"' and '"exams"' have no overlap.
+app/dashboard/[role]/page.tsx(2840,45): error TS2345: Argument of type '"exams"' is not assignable to parameter of type 'SetStateAction<"content" | "grades">'.
+app/dashboard/[role]/page.tsx(2847,39): error TS2367: This comparison appears to be unintentional because the types '"content" | "grades"' and '"exams"' have no overlap.
+app/dashboard/[role]/page.tsx(2898,106): error TS2304: Cannot find name 'router'.
+app/dashboard/[role]/page.tsx(2898,132): error TS2304: Cannot find name 'role'.
+app/dashboard/[role]/page.tsx(4064,52): error TS2554: Expected 2 arguments, but got 1.
+app/dashboard/[role]/page.tsx(4067,30): error TS2554: Expected 2 arguments, but got 1.
+i18n.ts(419,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(429,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(435,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(478,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(480,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(782,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(792,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(842,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1108,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1109,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1110,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1111,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1112,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1113,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1114,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1122,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1132,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1138,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1182,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1398,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1399,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1400,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1401,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1402,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1403,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1404,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1412,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1422,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1428,13): error TS1117: An object literal cannot have multiple properties with the same name.
+i18n.ts(1472,13): error TS1117: An object literal cannot have multiple properties with the same name.
