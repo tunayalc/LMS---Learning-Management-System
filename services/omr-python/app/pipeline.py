@@ -15,26 +15,24 @@ import numpy as np
 # ═══════════════════════════════════════════════════════════════════════════════
 
 FORM_LAYOUT = {
-    # CALIBRATED FROM USER BLUE MARKERS - 2024-01-09
-    # Measured from marked_form.png (754x1024 pixels)
-    # Top row Y=0.097, Bottom row Y=0.950
+    # Calibrated from user blue markers on a 2000px-wide resized image.
+    # Reference image: omr_debug_t028.jpg (2000x2715 after resize).
+    # Top markers y≈0.09734, bottom markers y≈0.94994 (52 rows => 51 intervals).
     "columns": [
-        # Column 1 (Q1-52): A at 0.557, next marker at ~0.651 = span 0.094
-        {"startX": 0.557, "endX": 0.651, "questionsStart": 1, "questionsCount": 52},
-        # Column 2 (Q53-104): A at 0.697, B at ~0.789 
-        {"startX": 0.697, "endX": 0.789, "questionsStart": 53, "questionsCount": 52},
-        # Column 3 (Q105-156): A at 0.838, E at ~0.931
-        {"startX": 0.838, "endX": 0.931, "questionsStart": 105, "questionsCount": 52},
+        # Column 1 (Q1-52): A..E span from blue markers.
+        {"startX": 0.5577, "endX": 0.6524, "questionsStart": 1, "questionsCount": 52},
+        # Column 2 (Q53-104): A..E span from blue markers.
+        {"startX": 0.6975, "endX": 0.7919, "questionsStart": 53, "questionsCount": 52},
+        # Column 3 (Q105-156): A..E span from blue markers.
+        {"startX": 0.838925, "endX": 0.932625, "questionsStart": 105, "questionsCount": 52},
     ],
-    # Y: First row at 0.097, last row at 0.950
-    "startYRatio": 0.097,
-    # Row height: (0.950 - 0.097) / 51 intervals = 0.0167
-    "rowHeightRatio": 0.0167,
-    # Bubble sampling radius
-    "bubbleRadiusRatio": 0.015,
+    "startYRatio": 0.0973419276,
+    "rowHeightRatio": 0.0167177024,
+    # Bubble radius tuned to ~19-20px on a 2000px-wide image.
+    "bubbleRadiusRatio": 0.01,
     "options": ["A", "B", "C", "D", "E"],
-    # Detection thresholds
-    "minRelativeRatio": 0.35,
+    # Detection thresholds (tuned for grayscale-ring fill metric)
+    "minRelativeRatio": 0.22,
     "minGapRatio": 0.08,
 }
 
@@ -660,34 +658,51 @@ def _bubble_mean(gray: np.ndarray, x: int, y: int, radius: int) -> float:
 # Debug counter for logging
 _fill_debug_counter = [0]
 
-def _bubble_fill_ratio(binary: np.ndarray, x: int, y: int, radius: int) -> float:
+def _bubble_fill_ratio(gray: np.ndarray, x: int, y: int, radius: int) -> float:
     """
-    Compute bubble fill ratio in [0..1] using the binarized (inverted) image.
-    Higher values indicate more "ink" (filled bubble).
+    Compute bubble "ink" score in [0..1] from grayscale using a local ring baseline.
+    This is more robust than binary sampling because it avoids counting the printed
+    bubble border as ink.
     """
-    height, width = binary.shape[:2]
+    height, width = gray.shape[:2]
     if x < 0 or y < 0 or x >= width or y >= height:
         return 0.0
 
-    # Use larger inner radius for better sampling
-    inner_radius = max(5, int(radius * 0.6))
-    x0 = max(0, x - inner_radius)
-    y0 = max(0, y - inner_radius)
-    x1 = min(width, x + inner_radius + 1)
-    y1 = min(height, y + inner_radius + 1)
-    roi = binary[y0:y1, x0:x1]
+    inner_radius = max(3, int(radius * 0.35))
+    ring_inner = max(inner_radius + 2, int(radius * 0.55))
+    ring_outer = max(ring_inner + 2, int(radius * 0.95))
+
+    x0 = max(0, x - ring_outer)
+    y0 = max(0, y - ring_outer)
+    x1 = min(width, x + ring_outer + 1)
+    y1 = min(height, y + ring_outer + 1)
+    roi = gray[y0:y1, x0:x1]
 
     cx = x - x0
     cy = y - y0
-    mask = np.zeros(roi.shape[:2], dtype=np.uint8)
-    cv2.circle(mask, (cx, cy), inner_radius, 255, -1)
-    mean_val = cv2.mean(roi, mask=mask)[0]
-    fill = float(mean_val) / 255.0
+
+    mask_inner = np.zeros(roi.shape[:2], dtype=np.uint8)
+    cv2.circle(mask_inner, (cx, cy), inner_radius, 255, -1)
+    mean_inner = float(cv2.mean(roi, mask=mask_inner)[0])
+
+    mask_ring = np.zeros(roi.shape[:2], dtype=np.uint8)
+    cv2.circle(mask_ring, (cx, cy), ring_outer, 255, -1)
+    cv2.circle(mask_ring, (cx, cy), ring_inner, 0, -1)
+    mean_ring = float(cv2.mean(roi, mask=mask_ring)[0])
+
+    # Darker center => more ink. Compare to local background (ring).
+    ink = (mean_ring - mean_inner) / 255.0
+    # Map "ink delta" into a stable [0..1] score:
+    # - small deltas (printed border / noise) collapse near 0
+    # - larger deltas (filled bubbles) ramp up quickly
+    fill = float(np.clip((ink - 0.10) * 6.0, 0.0, 1.0))
     
     # Debug: log first 20 bubbles
     _fill_debug_counter[0] += 1
     if _fill_debug_counter[0] <= 20:
-        print(f"[OMR-Debug] Bubble at ({x},{y}) r={radius} inner_r={inner_radius} fill={fill:.3f}")
+        print(
+            f"[OMR-Debug] Bubble at ({x},{y}) r={radius} inner_r={inner_radius} ring={ring_inner}-{ring_outer} fill={fill:.3f}"
+        )
     
     return fill
 
@@ -733,7 +748,7 @@ def _scan_answers(
                 for opt_idx, option in enumerate(FORM_LAYOUT["options"]):
                     x = int(option_positions[opt_idx] + (x_offset * width))
                     yy = int(y + (y_offset * height))
-                    fill = _bubble_fill_ratio(binary, x, yy, bubble_radius)
+                    fill = _bubble_fill_ratio(gray, x, yy, bubble_radius)
                     row_densities.append((option, fill, x))
                     option_baselines[option].append(fill)
                     if debug:
@@ -784,7 +799,7 @@ def _scan_answers(
 
                 for opt_idx, option in enumerate(FORM_LAYOUT["options"]):
                     x = option_positions[opt_idx]
-                    fill = _bubble_fill_ratio(binary, x, y, bubble_radius)
+                    fill = _bubble_fill_ratio(gray, x, y, bubble_radius)
                     row_densities.append((option, fill, x))
                     option_baselines[option].append(fill)
                     if debug:
@@ -819,7 +834,8 @@ def _scan_answers(
 
     for row in row_metrics:
         # Higher fill => more ink => more likely selected
-        row_densities = sorted(row["row_densities"], key=lambda item: item[1], reverse=True)
+        raw_densities: List[Tuple[str, float, int]] = list(row["row_densities"])
+        row_densities = sorted(raw_densities, key=lambda item: item[1], reverse=True)
         question_number = row["question"]
         question_id = row["question_id"]
         y = row["y"]
@@ -838,6 +854,14 @@ def _scan_answers(
         
         min_relative_delta = float(FORM_LAYOUT.get("minRelativeRatio", 0.20))
         min_gap_delta = float(FORM_LAYOUT.get("minGapRatio", 0.08))
+
+        # Mark "likely filled" bubbles for debug/calibration:
+        # include any option close to the row max, to support cases where multiple bubbles are filled.
+        top_fill = float(top[1])
+        marked_cutoff = max(min_ink_threshold, top_fill - 0.08)
+        marked_options = [
+            opt for (opt, fill, _x) in raw_densities if fill >= min_ink_threshold and fill >= marked_cutoff
+        ]
 
         # A bubble is selected if:
         # 1) It has enough ink (absolute floor)
@@ -860,6 +884,8 @@ def _scan_answers(
             {
                 "question": question_number,
                 "selected": selected,
+                "markedOptions": marked_options,
+                "multipleMarks": len(marked_options) > 1,
                 "correct": correct,
                 "confidence": round(confidence, 4),
                 "ink": round(float(top[1]), 4),
@@ -868,12 +894,16 @@ def _scan_answers(
             }
         )
 
-        if debug and selected and overlay is not None:
-            selected_x = next(
-                (item[2] for item in row_densities if item[0] == selected), None
-            )
-            if selected_x is not None:
-                cv2.circle(overlay, (selected_x, y), 6, (0, 255, 0), 2)
+        if debug and overlay is not None:
+            if selected:
+                selected_x = next((item[2] for item in row_densities if item[0] == selected), None)
+                if selected_x is not None:
+                    cv2.circle(overlay, (selected_x, y), 6, (0, 255, 0), 2)
+            elif marked_options:
+                # Show multi-marked bubbles (useful for calibration tests where multiple bubbles are filled).
+                for opt, _fill, x in raw_densities:
+                    if opt in marked_options:
+                        cv2.circle(overlay, (x, y), 6, (0, 255, 255), 2)
 
     debug_payload = {
         "threshold": float(threshold),

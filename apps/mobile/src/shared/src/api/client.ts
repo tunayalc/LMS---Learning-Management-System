@@ -91,7 +91,7 @@ async function request<T>(
   baseUrl: string,
   path: string,
   options: RequestOptions = {},
-  defaultTimeoutMs = 10000
+  defaultTimeoutMs = 30000
 ): Promise<T> {
   const url = joinUrl(baseUrl, path, options.params);
   const isFormData = isFormDataLike(options.body);

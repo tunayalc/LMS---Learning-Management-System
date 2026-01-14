@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface VideoConferenceProps {
     roomName: string;
@@ -10,6 +11,7 @@ interface VideoConferenceProps {
 }
 
 export default function VideoConference({ roomName, userName, domain = "meet.jit.si", onLeft }: VideoConferenceProps) {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(true);
 
     // If using the official Jitsi React SDK is too heavy, we use the iframe approach.
@@ -68,7 +70,7 @@ export default function VideoConference({ roomName, userName, domain = "meet.jit
             {loading && (
                 <div className="absolute inset-0 flex items-center justify-center text-white">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-                    <span className="ml-4">Toplantı yükleniyor...</span>
+                    <span className="ml-4">{t("meeting_loading")}</span>
                 </div>
             )}
             <div id="jitsi-container" className="w-full h-full" />

@@ -28,8 +28,9 @@ const H5PPlayer: React.FC<H5PPlayerProps> = ({ contentPath, title }) => {
             {title && (
                 <div style={{
                     height: '50px',
-                    backgroundColor: '#1f2937',
-                    color: 'white',
+                    backgroundColor: 'var(--card)',
+                    color: 'var(--ink)',
+                    borderBottom: '1px solid var(--border)',
                     display: 'flex',
                     alignItems: 'center',
                     padding: '0 16px',
@@ -37,10 +38,10 @@ const H5PPlayer: React.FC<H5PPlayerProps> = ({ contentPath, title }) => {
                     justifyContent: 'space-between'
                 }}>
                     <span style={{ fontWeight: 'bold' }}>🎮 {title}</span>
-                    <span style={{ fontSize: '12px', color: '#9ca3af' }}>H5P İnteraktif İçerik</span>
+                    <span style={{ fontSize: '12px', color: 'var(--ink-light)' }}>H5P İnteraktif İçerik</span>
                 </div>
             )}
-            <div style={{ flex: 1, position: 'relative', backgroundColor: 'white' }}>
+            <div style={{ flex: 1, position: 'relative', backgroundColor: 'var(--bg)' }}>
                 <iframe
                     src={playerUrl}
                     style={{

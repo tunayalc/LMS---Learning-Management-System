@@ -13,6 +13,15 @@
   --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   --glass: blur(12px);
+  --hover-bg: rgba(0, 0, 0, 0.06);
+  --bg-secondary: #f3f4f6;
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink-light);
+  --code-bg: #f1f5f9;
+  --code-ink: #0f172a;
+  --code-border: #e2e8f0;
+  --danger-bg: #fef2f2;
+  --danger-ink: #b91c1c;
 }
 
 /* Karanlık Mod Değişkenleri */
@@ -27,6 +36,15 @@ html[data-theme="dark"] {
   --border: #334155;
   --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  --hover-bg: rgba(255, 255, 255, 0.08);
+  --bg-secondary: rgba(255, 255, 255, 0.05);
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink-light);
+  --code-bg: rgba(2, 6, 23, 0.85);
+  --code-ink: #e2e8f0;
+  --code-border: rgba(255, 255, 255, 0.12);
+  --danger-bg: rgba(127, 29, 29, 0.35);
+  --danger-ink: #fecaca;
 }
 
 html[data-theme="dark"] body {
@@ -61,6 +79,24 @@ a {
   margin: 0 auto;
   padding: 40px 24px;
   width: 100%;
+}
+
+.shell--dashboard {
+  max-width: none;
+  margin: 0;
+  padding: 24px;
+}
+
+.shell--dashboard .topbar {
+  margin-left: 280px;
+  width: calc(100% - 280px);
+}
+
+@media (max-width: 900px) {
+  .shell--dashboard .topbar {
+    margin-left: 0;
+    width: 100%;
+  }
 }
 
 .auth-container {
@@ -106,6 +142,38 @@ a {
   top: 24px;
   z-index: 50;
   margin-bottom: 40px;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex: 1;
+}
+
+.language-switcher {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Dark-mode smoothing for some Tailwind-ish utility classes used inline */
+html[data-theme="dark"] .bg-white {
+  background-color: var(--card) !important;
+}
+html[data-theme="dark"] .bg-gray-50 {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+}
+html[data-theme="dark"] .text-gray-800,
+html[data-theme="dark"] .text-gray-700,
+html[data-theme="dark"] .text-gray-600 {
+  color: var(--ink) !important;
+}
+html[data-theme="dark"] .text-gray-500,
+html[data-theme="dark"] .text-gray-400 {
+  color: var(--ink-light) !important;
 }
 
 .brand {

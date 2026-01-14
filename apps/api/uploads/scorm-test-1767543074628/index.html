@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <title>SCORM Test</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 40px; }
+    .box { padding: 16px; border: 1px solid #ddd; border-radius: 12px; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>SCORM Test İçerik</h1>
+    <p>Bu içerik düzgün açıldıysa SCORM player çalışıyor demektir.</p>
+    <button onclick="markComplete()">Tamamlandı Olarak İşaretle</button>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    function getApi() {
+      return window.API || window.API_1484_11 || null;
+    }
+
+    function markComplete() {
+      const api = getApi();
+      const statusEl = document.getElementById("status");
+      if (!api) {
+        statusEl.textContent = "SCORM API bulunamadı.";
+        return;
+      }
+
+      // SCORM 1.2
+      if (api.LMSInitialize)

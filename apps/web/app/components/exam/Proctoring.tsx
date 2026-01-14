@@ -2,6 +2,7 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import * as faceapi from 'face-api.js';
+import { useTranslation } from 'react-i18next';
 
 interface ProctoringProps {
     examId: string;
@@ -9,6 +10,7 @@ interface ProctoringProps {
 }
 
 export default function Proctoring({ examId, onViolation }: ProctoringProps) {
+    const { t } = useTranslation();
     const videoRef = useRef<HTMLVideoElement>(null);
     const [modelsLoaded, setModelsLoaded] = useState(false);
     const [status, setStatus] = useState<'initializing' | 'active' | 'error'>('initializing');
@@ -67,11 +69,11 @@ export default function Proctoring({ examId, onViolation }: ProctoringProps) {
                 setFaceCount(count);
 
                 if (count === 0) {
-                    setWarning("⚠️ Yüzünüz algılanamadı! Lütfen kameraya bakın.");
-                    onViolation('no_face', 'Yüz tespit edilemedi');
+                    setWarning(t("proctoring_warning_no_face"));
+                    onViolation('no_face', t("proctoring_violation_no_face"));
                 } else if (count > 1) {
-                    setWarning("⚠️ Birden fazla kişi algılandı! Sınav kuralları ihlali.");
-                    onViolation('multiple_faces', 'Birden fazla yüz tespit edildi');
+                    setWarning(t("proctoring_warning_multiple_faces"));
+                    onViolation('multiple_faces', t("proctoring_violation_multiple_faces"));
                 } else {
                     setWarning(null);
                 }
@@ -87,11 +89,11 @@ export default function Proctoring({ examId, onViolation }: ProctoringProps) {
             bottom: '20px',
             right: '20px',
             width: '200px',
-            backgroundColor: 'white',
+            backgroundColor: 'var(--card)',
             borderRadius: '12px',
             boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
             overflow: 'hidden',
-            border: warning ? '3px solid #ef4444' : '1px solid #e2e8f0',
+            border: warning ? '3px solid #ef4444' : '1px solid var(--border)',
             zIndex: 9999
         }}>
             <div style={{ position: 'relative', height: '150px', backgroundColor: '#000' }}>
@@ -123,19 +125,19 @@ export default function Proctoring({ examId, onViolation }: ProctoringProps) {
                         borderRadius: '50%',
                         backgroundColor: status === 'active' ? '#22c55e' : '#ef4444'
                     }} />
-                    {status === 'active' ? 'Gözetim Aktif' : 'Bağlanıyor...'}
+                    {status === 'active' ? t("proctoring_status_active") : t("proctoring_status_connecting")}
                 </div>
             </div>
 
             {warning && (
                 <div style={{
                     padding: '8px',
-                    backgroundColor: '#fef2f2',
-                    color: '#dc2626',
+                    backgroundColor: 'var(--danger-bg)',
+                    color: 'var(--danger-ink)',
                     fontSize: '11px',
                     fontWeight: 600,
                     textAlign: 'center',
-                    borderTop: '1px solid #fee2e2'
+                    borderTop: '1px solid var(--border)'
                 }}>
                     {warning}
                 </div>
@@ -144,13 +146,13 @@ export default function Proctoring({ examId, onViolation }: ProctoringProps) {
             {!warning && (
                 <div style={{
                     padding: '8px',
-                    backgroundColor: '#f8fafc',
-                    color: '#64748b',
+                    backgroundColor: 'var(--bg)',
+                    color: 'var(--ink-light)',
                     fontSize: '11px',
                     textAlign: 'center',
-                    borderTop: '1px solid #e2e8f0'
+                    borderTop: '1px solid var(--border)'
                 }}>
-                    Lütfen ekrandan ayrılmayın
+                    {t("proctoring_hint_stay_on_screen")}
                 </div>
             )}
         </div>

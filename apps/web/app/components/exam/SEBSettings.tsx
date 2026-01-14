@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface SEBSettingsProps {
     examId: string;
@@ -21,6 +22,7 @@ export default function SEBSettings({
     apiBaseUrl,
     token
 }: SEBSettingsProps) {
+    const { t } = useTranslation();
     const [browserKey] = useState(sebBrowserKey);
 
     const handleDownloadConfig = () => {
@@ -30,55 +32,56 @@ export default function SEBSettings({
 
     return (
         <div className="seb-settings" style={{
-            border: '2px solid #22c55e',
+            border: '2px solid var(--accent)',
             borderRadius: '12px',
             padding: '20px',
             marginTop: '16px',
-            background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)'
+            background: 'var(--accent-soft)'
         }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
                 <span style={{ fontSize: '32px' }}>🔒</span>
                 <div>
-                    <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 700, color: '#166534' }}>
-                        Safe Exam Browser (SEB) Zorunlu
+                    <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: 'var(--ink)' }}>
+                        {t("seb_required_title")}
                     </h3>
-                    <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#15803d' }}>
-                        Bu sınava sadece SEB tarayıcısı ile girilebilir
+                    <p style={{ margin: '4px 0 0', fontSize: '14px', color: 'var(--ink-light)' }}>
+                        {t("seb_required_message")}
                     </p>
                 </div>
             </div>
 
             <div style={{
                 padding: '16px',
-                background: 'rgba(255,255,255,0.8)',
+                background: 'var(--card)',
+                border: '1px solid var(--border)',
                 borderRadius: '8px',
                 marginBottom: '16px'
             }}>
-                <h4 style={{ margin: '0 0 12px', fontSize: '14px', fontWeight: 600, color: '#166534' }}>
-                    🛡️ Aktif Güvenlik Özellikleri:
+                <h4 style={{ margin: '0 0 12px', fontSize: '14px', fontWeight: 700, color: 'var(--ink)' }}>
+                    🛡️ {t("seb_features_title")}
                 </h4>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: '13px' }}>
-                    <div>✅ Kiosk Modu (Tam ekran)</div>
-                    <div>✅ Ekran görüntüsü engeli</div>
-                    <div>✅ Kopyala/Yapıştır engeli</div>
-                    <div>✅ DevTools engeli</div>
-                    <div>✅ URL filtreleme</div>
-                    <div>✅ Uygulama değişiklik algılama</div>
-                    <div>✅ Browser Key doğrulama</div>
-                    <div>✅ Oturum şifreleme</div>
+                    <div>✅ {t("seb_feature_kiosk")}</div>
+                    <div>✅ {t("seb_feature_screenshot_block")}</div>
+                    <div>✅ {t("seb_feature_copy_paste_block")}</div>
+                    <div>✅ {t("seb_feature_devtools_block")}</div>
+                    <div>✅ {t("seb_feature_url_filtering")}</div>
+                    <div>✅ {t("seb_feature_app_switch_detection")}</div>
+                    <div>✅ {t("seb_feature_browser_key_validation")}</div>
+                    <div>✅ {t("seb_feature_session_encryption")}</div>
                 </div>
             </div>
 
             {browserKey && (
                 <div style={{
                     padding: '12px',
-                    background: '#fff',
-                    border: '1px solid #bbf7d0',
+                    background: 'var(--bg)',
+                    border: '1px solid var(--border)',
                     borderRadius: '8px',
                     marginBottom: '16px',
                     fontFamily: 'monospace',
                     fontSize: '12px',
-                    color: '#166534'
+                    color: 'var(--ink)'
                 }}>
                     <strong>Browser Key:</strong> {browserKey.substring(0, 20)}...
                 </div>
@@ -112,7 +115,7 @@ export default function SEBSettings({
                     e.currentTarget.style.boxShadow = '0 4px 14px rgba(34, 197, 94, 0.4)';
                 }}
             >
-                📥 SEB Yapılandırma Dosyasını İndir (.seb)
+                📥 {t("seb_download_config_button")}
             </button>
 
             <div style={{
@@ -124,13 +127,13 @@ export default function SEBSettings({
                 fontSize: '13px',
                 color: '#92400e'
             }}>
-                <strong>⚠️ Öğrencilere Not:</strong><br />
+                <strong>⚠️ {t("seb_students_note_title")}</strong><br />
                 1. <a href="https://safeexambrowser.org/download_en.html" target="_blank" style={{ color: '#b45309' }}>
-                    SEB'i indirin ve kurun
+                    {t("seb_students_note_step1")}
                 </a><br />
-                2. Yukarıdaki .seb dosyasını indirin<br />
-                3. .seb dosyasını SEB ile açın<br />
-                4. Sınav otomatik başlayacaktır
+                2. {t("seb_students_note_step2")}<br />
+                3. {t("seb_students_note_step3")}<br />
+                4. {t("seb_students_note_step4")}
             </div>
         </div>
     );

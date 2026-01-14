@@ -223,7 +223,7 @@ export default function LoginPage() {
               if (loginApiClient) {
                 window.location.href = `${apiBaseUrl}/auth/google`;
               } else {
-                alert("API URL not resolved");
+                alert(t("api_url_not_resolved"));
               }
             }}
             suppressHydrationWarning
@@ -239,7 +239,7 @@ export default function LoginPage() {
               if (loginApiClient) {
                 window.location.href = `${apiBaseUrl}/auth/microsoft`;
               } else {
-                alert("API URL not resolved");
+                alert(t("api_url_not_resolved"));
               }
             }}
             style={{ backgroundColor: '#0078d4', color: 'white', border: 'none' }}
@@ -275,7 +275,7 @@ export default function LoginPage() {
           </button>
           <div style={{ marginTop: '16px', borderTop: '1px solid var(--border)', width: '100%', paddingTop: '12px', textAlign: 'center' }}>
             <Link href="/kvkk" className="btn btn-outline" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', marginTop: '20px', fontSize: '0.9rem', textDecoration: 'none' }}>
-              {t('kvkk_link') || "KVKK Aydınlatma Metni"}
+              {t('kvkk_link')}
             </Link>
           </div>
         </div>

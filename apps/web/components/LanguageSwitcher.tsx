@@ -10,7 +10,7 @@ export default function LanguageSwitcher() {
     };
 
     return (
-        <div style={{ marginLeft: "auto", display: "flex", gap: "10px", alignItems: "center" }}>
+        <div className="language-switcher">
             <button
                 onClick={() => changeLanguage('tr')}
                 style={{ fontWeight: i18n.language === 'tr' ? 'bold' : 'normal', cursor: 'pointer', background: 'none', border: 'none', color: 'var(--ink)', fontSize: '0.9rem' }}

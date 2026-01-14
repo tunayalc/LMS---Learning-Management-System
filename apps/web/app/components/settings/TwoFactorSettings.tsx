@@ -156,7 +156,8 @@ export default function TwoFactorSettings({ apiBaseUrl, token }: TwoFactorSettin
 
                         {qrUri && (
                             <div style={{
-                                background: "#fff",
+                                background: "var(--card)",
+                                border: "1px solid var(--border)",
                                 padding: 16,
                                 borderRadius: 8,
                                 display: "inline-block",
@@ -172,7 +173,7 @@ export default function TwoFactorSettings({ apiBaseUrl, token }: TwoFactorSettin
 
                         {secret && (
                             <p className="meta" style={{ marginBottom: 12, fontSize: "0.75rem" }}>
-                                {t("manual_entry")} <code style={{ background: "#f1f5f9", padding: "2px 6px", borderRadius: 4 }}>{secret}</code>
+                                {t("manual_entry")} <code style={{ background: "var(--bg-secondary)", padding: "2px 6px", borderRadius: 4 }}>{secret}</code>
                             </p>
                         )}
 

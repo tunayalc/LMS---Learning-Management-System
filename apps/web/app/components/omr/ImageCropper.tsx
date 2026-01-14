@@ -135,7 +135,7 @@ export default function ImageCropper({ imageSrc, onCropComplete, onCancel }: Ima
 
     return (
         <div style={{ position: "relative" }}>
-            <p style={{ marginBottom: "8px", fontSize: "14px", color: "#666" }}>
+            <p style={{ marginBottom: "8px", fontSize: "14px", color: "var(--ink-light)" }}>
                 Köşeleri sürükleyerek form alanını seçin
             </p>
             <canvas
@@ -148,7 +148,7 @@ export default function ImageCropper({ imageSrc, onCropComplete, onCancel }: Ima
                     maxWidth: "100%",
                     height: "auto",
                     cursor: draggingIdx !== null ? "grabbing" : "grab",
-                    border: "2px solid #ccc",
+                    border: "2px solid var(--border)",
                     borderRadius: "8px",
                 }}
             />

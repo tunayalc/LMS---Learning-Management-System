@@ -4,6 +4,7 @@ import { Question, QuestionMeta, Exam, trueFalseOptions } from '@lms/shared';
 import Proctoring from './Proctoring';
 import { HotspotQuestion } from '../questions';
 import { useTranslation } from 'react-i18next';
+import LocalizedFileInput from '../../../components/LocalizedFileInput';
 
 interface ExamTakingComponentProps {
     exam: Exam;
@@ -272,7 +273,6 @@ export default function ExamTakingComponent({
     const [timeLeft, setTimeLeft] = useState<number | null>(
         exam.durationMinutes ? exam.durationMinutes * 60 : null
     );
-    const fileInputRef = useRef<HTMLInputElement>(null);
     const proctorThrottleRef = useRef<{ type: 'multiple_faces' | 'no_face' | 'unknown'; at: number } | null>(null);
 
     useEffect(() => {
@@ -602,15 +602,13 @@ export default function ExamTakingComponent({
         <div style={{ padding: '24px', border: '2px dashed rgba(255,255,255,0.2)', borderRadius: '16px', textAlign: 'center' }}>
             <div style={{ fontSize: '3rem', marginBottom: '16px' }}>📁</div>
             <p style={{ color: '#94a3b8', marginBottom: '16px' }}>{t('file_drop_prompt', 'Click to select or drag a file here')}</p>
-            <input
-                type="file"
-                ref={fileInputRef}
-                onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) setAnswer(q.id, file.name); // Store filename as placeholder
-                }}
-                style={{ display: 'block', margin: '0 auto' }}
-            />
+            <div style={{ maxWidth: '520px', margin: '0 auto' }}>
+                <LocalizedFileInput
+                    onSelect={(file) => {
+                        if (file) setAnswer(q.id, file.name); // Store filename as placeholder
+                    }}
+                />
+            </div>
             {answers[q.id] && (
                 <p style={{ color: '#22c55e', marginTop: '12px' }}>✓ {t('file_uploaded', 'File selected')}: {String(answers[q.id])}</p>
             )}

@@ -29,6 +29,7 @@ export const metadata: Metadata = {
 
 import I18nProvider from "../components/I18nProvider";
 import LanguageSwitcher from "../components/LanguageSwitcher";
+import Shell from "../components/Shell";
 import ThemeProvider, { ThemeToggle } from "./components/ThemeProvider";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -37,19 +38,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ThemeProvider>
           <I18nProvider>
-            <div className="shell">
+            <Shell>
               <header className="topbar">
                 <div className="brand">
                   <span style={{ fontSize: '1.5rem' }}>🎓</span>
                   LMS WEB
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div className="topbar-actions">
                   <ThemeToggle />
                   <LanguageSwitcher />
                 </div>
               </header>
               {children}
-            </div>
+            </Shell>
           </I18nProvider>
         </ThemeProvider>
       </body>

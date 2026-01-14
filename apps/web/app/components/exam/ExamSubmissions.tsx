@@ -72,29 +72,29 @@ const styles = {
         backdropFilter: 'blur(5px)'
     },
     modal: {
-        backgroundColor: '#ffffff',
+        backgroundColor: 'var(--card)',
         width: '95%', maxWidth: '1200px', height: '90vh',
         borderRadius: '16px',
         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
         display: 'flex', flexDirection: 'column' as 'column',
         overflow: 'hidden',
-        color: '#1e293b', // slate-800
+        color: 'var(--ink)',
         fontFamily: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
     },
     header: {
         padding: '20px 24px',
-        borderBottom: '1px solid #e2e8f0', // slate-200
+        borderBottom: '1px solid var(--border)',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        backgroundColor: '#fff',
+        backgroundColor: 'var(--card)',
         flexShrink: 0
     },
-    title: { margin: 0, fontSize: '1.25rem', fontWeight: 700, color: '#0f172a' }, // slate-900
-    subtitle: { margin: '4px 0 0', fontSize: '0.875rem', color: '#64748b' }, // slate-500
+    title: { margin: 0, fontSize: '1.25rem', fontWeight: 800, color: 'var(--ink)' },
+    subtitle: { margin: '4px 0 0', fontSize: '0.875rem', color: 'var(--ink-light)' },
     closeBtn: {
-        background: '#f1f5f9', border: 'none', borderRadius: '50%',
+        background: 'var(--bg-secondary)', border: 'none', borderRadius: '50%',
         width: '40px', height: '40px',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        cursor: 'pointer', color: '#475569', fontSize: '20px',
+        cursor: 'pointer', color: 'var(--ink-light)', fontSize: '20px',
         transition: 'background 0.2s',
         zIndex: 100000
     },
@@ -102,12 +102,12 @@ const styles = {
         padding: '32px',
         overflowY: 'auto' as 'auto',
         flex: 1,
-        backgroundColor: '#f8fafc' // slate-50
+        backgroundColor: 'var(--bg)'
     },
     card: {
-        backgroundColor: '#fff',
+        backgroundColor: 'var(--card)',
         borderRadius: '12px',
-        border: '1px solid #e2e8f0',
+        border: '1px solid var(--border)',
         boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
         overflow: 'hidden',
         marginBottom: '20px'
@@ -147,6 +147,37 @@ export default function ExamSubmissions({ examId, examTitle, apiBase, token, onC
     const [proctorLoading, setProctorLoading] = useState(false);
     const proctorLastSeenRef = useRef<string | null>(null);
     const [newViolations, setNewViolations] = useState(0);
+
+    const translateViolationType = (type: string) => {
+        switch (type) {
+            case 'no_face':
+                return t('proctoring_type_no_face', 'no_face');
+            case 'multiple_faces':
+                return t('proctoring_type_multiple_faces', 'multiple_faces');
+            case 'unknown':
+                return t('proctoring_type_unknown', 'unknown');
+            default:
+                return type;
+        }
+    };
+
+    const translateViolationMessage = (log: ProctorLog) => {
+        switch (log.violationType) {
+            case 'no_face':
+                return t('proctoring_violation_no_face', 'Face not detected');
+            case 'multiple_faces':
+                return t('proctoring_violation_multiple_faces', 'Multiple faces detected');
+            default: {
+                const msg = (log.message ?? '').trim();
+                if (!msg) return '';
+                // If backend sent a translation key, try resolving it.
+                if (/^[a-z0-9_]+$/i.test(msg)) {
+                    return t(msg);
+                }
+                return msg;
+            }
+        }
+    };
 
     const fetchSubmissions = useCallback(async () => {
         setLoading(true);
@@ -369,7 +400,7 @@ export default function ExamSubmissions({ examId, examTitle, apiBase, token, onC
                                     ) : (
                                         <div style={{ overflowX: 'auto' }}>
                                             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                                                <thead style={{ backgroundColor: '#fff', borderBottom: '1px solid #e2e8f0' }}>
+                                                <thead style={{ backgroundColor: 'var(--card)', borderBottom: '1px solid var(--border)' }}>
                                                     <tr>
                                                         <th style={{ padding: '10px 12px', fontSize: '0.75rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 700 }}>{t('date', 'Date')}</th>
                                                         <th style={{ padding: '10px 12px', fontSize: '0.75rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 700 }}>{t('student', 'Student')}</th>
@@ -377,15 +408,15 @@ export default function ExamSubmissions({ examId, examTitle, apiBase, token, onC
                                                         <th style={{ padding: '10px 12px', fontSize: '0.75rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 700 }}>{t('message', 'Message')}</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody style={{ backgroundColor: '#fff' }}>
+                                                <tbody style={{ backgroundColor: 'var(--card)' }}>
                                                     {proctorLogs.map((log, idx) => (
-                                                        <tr key={log.id} style={{ borderBottom: idx === proctorLogs.length - 1 ? 'none' : '1px solid #f1f5f9' }}>
-                                                            <td style={{ padding: '10px 12px', fontFamily: 'monospace', fontSize: '0.8rem', color: '#475569' }}>
+                                                        <tr key={log.id} style={{ borderBottom: idx === proctorLogs.length - 1 ? 'none' : '1px solid var(--border)' }}>
+                                                            <td style={{ padding: '10px 12px', fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--ink-light)' }}>
                                                                 {new Date(log.createdAt).toLocaleString()}
                                                             </td>
-                                                            <td style={{ padding: '10px 12px', fontWeight: 600, color: '#0f172a' }}>{log.userName}</td>
-                                                            <td style={{ padding: '10px 12px', color: '#334155' }}>{log.violationType}</td>
-                                                            <td style={{ padding: '10px 12px', color: '#334155' }}>{log.message}</td>
+                                                            <td style={{ padding: '10px 12px', fontWeight: 600, color: 'var(--ink)' }}>{log.userName}</td>
+                                                            <td style={{ padding: '10px 12px', color: 'var(--ink)' }}>{translateViolationType(log.violationType)}</td>
+                                                            <td style={{ padding: '10px 12px', color: 'var(--ink)' }}>{translateViolationMessage(log)}</td>
                                                         </tr>
                                                     ))}
                                                 </tbody>

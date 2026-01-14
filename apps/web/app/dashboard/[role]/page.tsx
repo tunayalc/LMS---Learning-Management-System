@@ -16,6 +16,7 @@ import RubricEditor from "../../components/rubric/RubricEditor";
 import ContentPlayer from "../../components/course/ContentPlayer";
 import NotesPanel from "../../components/course/NotesPanel";
 import ContentReorderList from "../../components/course/ContentReorderList";
+import LocalizedFileInput from "../../../components/LocalizedFileInput";
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createApiClient, resolveApiBaseUrl, questionTypeOptions, trueFalseOptions } from "@lms/shared";
@@ -3007,14 +3008,14 @@ export default function RoleDashboardPage({ params }: PageProps) {
                     // If the URL contains 'hooks', it's a webhook. 
                     // If it's not a hook, open it.
                     if (selectedCourse.mattermostWebhookUrl?.includes('/hooks/')) {
-                      alert("Bu bir Webhook URL'idir. Sohbet katılım linki değildir. Lütfen ayarlardan davet linkini giriniz.");
+                      alert(t("mattermost_webhook_warning"));
                     } else {
                       window.open(selectedCourse.mattermostWebhookUrl, '_blank');
                     }
                   }}
                   className="btn btn-outline btn-sm gap-2 inline-flex items-center text-blue-600 border-blue-600 hover:bg-blue-50"
                 >
-                  💬 {t('join_chat', 'Sohbete Katıl')}
+                  💬 {t('join_chat')}
                 </a>
               </div>
             )}
@@ -3064,7 +3065,7 @@ export default function RoleDashboardPage({ params }: PageProps) {
                           <div className="text-sm text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-2">
                             <span>⏱️ {exam.durationMinutes ? `${exam.durationMinutes} dk` : 'Süresiz'}</span>
                             <span className="text-slate-300 dark:text-slate-600">|</span>
-                            <span>🎯 Geçme: {exam.passThreshold}</span>
+                            <span>🎯 {t('pass_threshold')}: {exam.passThreshold}</span>
                           </div>
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
@@ -3507,13 +3508,13 @@ export default function RoleDashboardPage({ params }: PageProps) {
                     />
                     <input
                       className="input"
-                      placeholder="Mattermost Webhook URL"
+                      placeholder={t("mattermost_webhook_url")}
                       value={mattermostWebhookUrl}
                       onChange={(event) => setMattermostWebhookUrl(event.target.value)}
                     />
                     <input
                       className="input"
-                      placeholder="Mattermost Sohbet/Davet Linki (Örn: http://localhost:8065/team/channels/general)"
+                      placeholder={t("mattermost_channel_url")}
                       value={mattermostChannelUrl}
                       onChange={(event) => setMattermostChannelUrl(event.target.value)}
                     />
@@ -3541,13 +3542,13 @@ export default function RoleDashboardPage({ params }: PageProps) {
                   />
                   <input
                     className="input"
-                    placeholder="Mattermost Webhook URL"
+                    placeholder={t("mattermost_webhook_url")}
                     value={editCourseMattermostWebhookUrl}
                     onChange={(event) => setEditCourseMattermostWebhookUrl(event.target.value)}
                   />
                   <input
                     className="input"
-                    placeholder="Mattermost Sohbet/Davet Linki"
+                    placeholder={t("mattermost_channel_url_short")}
                     value={editCourseMattermostChannelUrl}
                     onChange={(event) => setEditCourseMattermostChannelUrl(event.target.value)}
                   />
@@ -3716,7 +3717,7 @@ export default function RoleDashboardPage({ params }: PageProps) {
                           <div style={{ display: 'flex', gap: '8px', marginTop: '4px', alignItems: 'center' }}>
                             <span className="badge" style={{ fontSize: '0.75rem', padding: '2px 8px' }}>
                               {item.type === 'live_class' ? t('live_class') :
-                                item.type === 'scorm' ? t('SCORM') :
+                                item.type === 'scorm' ? t('scorm') :
                                   item.type === 'h5p' ? t('h5p') :
                                     item.type === 'zip' ? t('zip') :
                                       t(item.type)}
@@ -3883,17 +3884,17 @@ export default function RoleDashboardPage({ params }: PageProps) {
                       }}
                     />
                     <div className="form-group" style={{ marginBottom: '12px' }}>
-                      <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '4px', color: '#64748b' }}>{t("or_file_upload")}</label>
-                      <input
-                        type="file"
-                        className="input"
+                      <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '4px', color: 'var(--ink-light)' }}>
+                        {t("or_file_upload")}
+                      </label>
+                      <LocalizedFileInput
                         accept={
                           contentType === 'video' ? 'video/*' :
                             contentType === 'pdf' ? '.pdf,application/pdf' :
                               (contentType === 'h5p' || contentType === 'scorm') ? '.zip,.h5p,application/zip,application/x-zip-compressed' :
                                 undefined
                         }
-                        onChange={(e) => setContentFile(e.target.files?.[0] || null)}
+                        onSelect={(file) => setContentFile(file)}
                       />
                     </div>
                     <div className="meta-block" style={{ marginBottom: '12px' }}>
@@ -4002,19 +4003,17 @@ export default function RoleDashboardPage({ params }: PageProps) {
                     }}
                   />
                   <div className="form-group" style={{ marginBottom: '12px' }}>
-                    <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '4px', color: '#64748b' }}>
+                    <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '4px', color: 'var(--ink-light)' }}>
                       {t("or_file_upload")}
                     </label>
-                    <input
-                      type="file"
-                      className="input"
+                    <LocalizedFileInput
                       accept={
                         editContentType === 'video' ? 'video/*' :
                           editContentType === 'pdf' ? '.pdf,application/pdf' :
                             (editContentType === 'h5p' || editContentType === 'scorm') ? '.zip,.h5p,application/zip,application/x-zip-compressed' :
                               undefined
                       }
-                      onChange={(e) => setEditContentFile(e.target.files?.[0] || null)}
+                      onSelect={(file) => setEditContentFile(file)}
                     />
                   </div>
                   <button

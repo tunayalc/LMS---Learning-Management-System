@@ -1,0 +1,4 @@
+owner: ytuna
+repo: lms-desktop
+provider: github
+updaterCacheDirName: '@lmsdesktop-updater'

@@ -83,3 +83,6 @@ apps/mobile/.expo/
 apps/*/node_modules/
 packages/*/node_modules/
 services/*/.venv/
+
+# Next.js build çýktýlarý
+apps/web/.next/
